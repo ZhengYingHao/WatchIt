@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.zyh.watchit" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.example.zyh.watchit.permission.SINA_PUSH" />
+
+    <permission
+        android:name="com.example.zyh.watchit.permission.SINA_PUSH"
+        android:protectionLevel="normal" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".ui.LoginActivity"
+            android:label="@string/title_activity_login" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ShowFaceActivity"
+            android:label="@string/title_activity_show_face" >
+        </activity>
+
+
+
+
+
+
+
+
+
+
+
+
+        <service
+            android:name="com.sina.push.service.SinaPushService"
+            android:label="PushDataCenter"
+            android:permission="com.example.zyh.watchit.permission.SINA_PUSH"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="sina.push.action.service.22267" />
+
+                <category android:name="android.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!-- 声明使用SinaPushSDK必须注册的广播事件 -->
+        <receiver android:name="com.sina.push.receiver.PushSDKReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 声明使用SinaPushSDK 接收透传消息的广播事件 -->
+        <receiver android:name=".SDKMsgReceiver" >
+            <intent-filter>
+                <action android:name="com.sina.push.msg.broadcast.22267" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.sina.push.datacenter.PushProvider"
+            android:authorities="com.sina.push.pushprovider.22267"
+            android:multiprocess="false"
+            android:process=":remote" />
+
+        <!-- 声明第三方定义的消息接收服务 -->
+        <service
+            android:name=".service.MsgReceiveService"
+            android:label="MsgRecvService" >
+            <intent-filter>
+                <action android:name="sina.push.action.msgreceive.22267" />
+
+                <category android:name="android.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="sinapush_appid"
+            android:value="22267" />
+
+
+
+
+
+
+        <service
+            android:name=".service.MyIntentService"
+            android:exported="false" >
+        </service>
+    </application>
+
+</manifest>
