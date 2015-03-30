@@ -27,6 +27,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         init();
 
         loginBtn.setOnClickListener(this);
+        registerBtn.setOnClickListener(this);
 
         //暂时直接登录
         ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
@@ -49,6 +50,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 else {
                     Toast.makeText(LoginActivity.this, "wrong userName or password.", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.registerBtn:
                 break;
         }
     }
