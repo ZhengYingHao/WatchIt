@@ -1,6 +1,7 @@
 package com.example.zyh.watchit.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,11 +17,15 @@ import android.widget.TextView;
 
 import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
+import com.example.zyh.watchit.service.TimerService;
 import com.sina.push.PushManager;
 
 public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
     public static final String TAG = "ShowFaceActivity";
+
+//    private static final String HINT_VISIT = "Someone at your home.";
+//    private static final String HINT_NO_VISIT = "no visitor.";
 
     private static ImageView faceImageView;
 
@@ -32,7 +37,7 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
     private String APPID = "22267";
 
-    private Button reconnectBtn;
+    private Button reconnectBtn, getFaceBtn;
 
 
     public static void startShowFaceActivity(Context context) {
@@ -50,7 +55,10 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
         init();
         initPushManager();
+
+
         reconnectBtn.setOnClickListener(this);
+        getFaceBtn.setOnClickListener(this);
 
         downloadDataToBitmap(getString(R.string.faceUrl));
     }
@@ -60,6 +68,7 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
         hintTextView = (TextView)findViewById(R.id.hintTextView);
         aidTextView = (TextView)findViewById(R.id.aid);
         reconnectBtn = (Button)findViewById(R.id.reconnect);
+        getFaceBtn = (Button)findViewById(R.id.getFace);
     }
 
     private void initPushManager() {
@@ -77,10 +86,18 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 //                pushManager = null;
 //                initPushManager();
                 break;
+            case R.id.getFace:
+                downloadDataToBitmap(getString(R.string.faceUrl));
+                break;
             default:
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     public void setFaceImageView(Bitmap bitmap) {
         if (faceImageView != null)
@@ -99,11 +116,6 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
     }
 
     public void downloadDataToBitmap(String urlPath) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//            }
-//        }).start();
         AsyncTask asyncTask = new AsyncTask<Object, Bitmap, Boolean>() {
             @Override
             protected Boolean doInBackground(Object... params) {
@@ -129,6 +141,16 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
         asyncTask.execute(urlPath);
     }
 
+    public class TimeBroadcastReceiver extends BroadcastReceiver {
+
+        public static final String ACTION = "com.example.zyh.watchit.timereceiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            pushManager.refreshConnection();
+            TimerService.startTimerService(ShowFaceActivity.this, 1000 * 60 * 60);
+        }
+    }
 
 
 

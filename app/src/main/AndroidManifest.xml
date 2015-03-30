@@ -38,7 +38,22 @@
             android:label="@string/title_activity_show_face" >
         </activity>
 
+        <receiver
+            android:name=".ui.ShowFaceActivity$TimeBroadcastReceiver"
+            android:permission="com.example.zyh.watchit.permission.time_receiver">
+            <intent-filter>
+                <action android:name="com.example.zyh.watchit.timereceiver" />
+            </intent-filter>
+        </receiver>
 
+        <service
+            android:name=".service.TimerService"
+            android:permission="com.example.zyh.watchit.permission.TIMER">
+            <intent-filter>
+                <action android:name="com.example.zyh.watchit.timerservice" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
 
 
