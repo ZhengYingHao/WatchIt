@@ -12,6 +12,9 @@ public class MyIntentService extends IntentService {
 
     private static final String ACTION_SENDAID = "com.example.zyh.watchit.service.action.sendaid";
 
+    private static final String ACTION_LOGIN = "";
+
+    private static final String ACTION_REGISTER = "";
 
     private static final String EXTRA_AID = "com.example.zyh.watchit.service.extra.aid";
 
@@ -40,7 +43,7 @@ public class MyIntentService extends IntentService {
     }
 
     private void handleActionSendAid(String aid) {
-        HttpUtil.uploadString(getString(R.string.updateAid), aid);
+        HttpUtil.uploadString(getString(R.string.updateAidUrl), aid);
     }
 
 }

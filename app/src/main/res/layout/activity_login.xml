@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal">
             <TextView
                 android:layout_width="match_parent"
-                android:text="user's name"
+                android:text="@string/userName"
                 android:layout_column="0" />
 
             <EditText
@@ -35,7 +35,7 @@
             android:layout_gravity="center_horizontal">
             <TextView
                 android:layout_width="match_parent"
-                android:text="password"/>
+                android:text="@string/password"/>
             <EditText
                 android:id="@+id/password"
                 android:layout_width="wrap_content"
@@ -51,18 +51,28 @@
                 android:layout_height="match_parent"
                 android:layout_span="2">
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/loginBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Login" />
+                    android:text="@string/login" />
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/registerBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="register" />
+                    android:text="@string/register" />
             </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/hintTv"
+                android:text="@string/errorLogin"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </TableRow>
     </TableLayout>
 

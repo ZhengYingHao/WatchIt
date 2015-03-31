@@ -6,7 +6,16 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_show_face">ShowFaceActivity</string>
 
-    <string name="updateAid">http://watchhome.sinaapp.com/watchIt.php</string>
+    <string name="updateAidUrl">http://watchhome.sinaapp.com/watchIt.php</string>
     <string name="faceUrl">http://watchhome-face.stor.sinaapp.com/tface.jpeg</string>
     <!--<string name="faceUrl">http://watchhome-face.stor.sinaapp.com/watchItAid.txt</string>-->
+    <string name="checkUserUrl">http://watchhome.sinaapp.com/login.php</string>
+    <string name="registerUrl">http://watchhome.sinaapp.com/register.php</string>
+
+    <string name="errorLogin">用户名或者密码错误</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="password">password</string>
+    <string name="userName">用户名</string>
+
 </resources>
