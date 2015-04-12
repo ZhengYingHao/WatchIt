@@ -75,7 +75,7 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
         reconnectBtn = (Button)findViewById(R.id.reconnect);
         getFaceBtn = (Button)findViewById(R.id.getFace);
         quitBtn = (Button)findViewById(R.id.quit);
-        //将 tface 改为 UserInfo.getUserInfo().getName()
+        //将 tface 改为 UserInfo.getUserInfo().getId()
         fileName = getString(R.string.faceUrl) + UserInfo.getUserInfo().getId() + ".jpeg";
     }
 
