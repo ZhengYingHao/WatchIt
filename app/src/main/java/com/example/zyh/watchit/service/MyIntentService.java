@@ -3,12 +3,15 @@ package com.example.zyh.watchit.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
 
 
 public class MyIntentService extends IntentService {
+
+    public static final String TAG = "MyIntentService";
 
     private static final String ACTION_SENDAID = "com.example.zyh.watchit.service.action.sendaid";
 
@@ -43,6 +46,7 @@ public class MyIntentService extends IntentService {
     }
 
     private void handleActionSendAid(String aid) {
+        Log.i(TAG, "send aid.");
         HttpUtil.uploadString(getString(R.string.updateAidUrl), aid);
     }
 

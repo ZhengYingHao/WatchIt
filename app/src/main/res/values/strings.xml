@@ -7,8 +7,8 @@
     <string name="title_activity_show_face">ShowFaceActivity</string>
 
     <string name="updateAidUrl">http://watchhome.sinaapp.com/watchIt.php</string>
-    <string name="faceUrl">http://watchhome-face.stor.sinaapp.com/tface.jpeg</string>
-    <!--<string name="faceUrl">http://watchhome-face.stor.sinaapp.com/watchItAid.txt</string>-->
+    <string name="faceUrl">http://watchhome-face.stor.sinaapp.com/</string>
+
     <string name="checkUserUrl">http://watchhome.sinaapp.com/login.php</string>
     <string name="registerUrl">http://watchhome.sinaapp.com/register.php</string>
 
