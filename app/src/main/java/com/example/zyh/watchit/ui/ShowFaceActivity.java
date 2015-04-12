@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
+import com.example.zyh.watchit.UserInfo;
 import com.example.zyh.watchit.service.TimerService;
 import com.sina.push.PushManager;
 
@@ -37,10 +38,12 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
     private String APPID = "22267";
 
-    private Button reconnectBtn, getFaceBtn;
+    private Button reconnectBtn, getFaceBtn, quitBtn;
 
+    private String fileName;
 
     public static void startShowFaceActivity(Context context) {
+        UserInfo.getUserInfo().setState(UserInfo.USER_IN_CLIENT);
         Intent intent = new Intent(context, ShowFaceActivity.class);
         context.startActivity(intent);
     }
@@ -59,8 +62,10 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
         reconnectBtn.setOnClickListener(this);
         getFaceBtn.setOnClickListener(this);
+        quitBtn.setOnClickListener(this);
 
-        downloadDataToBitmap(getString(R.string.faceUrl));
+        Log.i(TAG, "get fileName : " + fileName);
+        downloadDataToBitmap(fileName);
     }
 
     private void init() {
@@ -69,6 +74,9 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
         aidTextView = (TextView)findViewById(R.id.aid);
         reconnectBtn = (Button)findViewById(R.id.reconnect);
         getFaceBtn = (Button)findViewById(R.id.getFace);
+        quitBtn = (Button)findViewById(R.id.quit);
+        //将 tface 改为 UserInfo.getUserInfo().getName()
+        fileName = getString(R.string.faceUrl) + UserInfo.getUserInfo().getId() + ".jpeg";
     }
 
     private void initPushManager() {
@@ -87,7 +95,10 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 //                initPushManager();
                 break;
             case R.id.getFace:
-                downloadDataToBitmap(getString(R.string.faceUrl));
+                downloadDataToBitmap(fileName);
+                break;
+            case R.id.quit:
+                finish();
                 break;
             default:
         }
