@@ -136,12 +136,11 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 
     private void localLogin() {
         SharedPreferences sp = getSharedPreferences(SPNAME, MODE_PRIVATE);
-        String name = sp.getString(USER, "");
+        String id = sp.getString(USER, "");
         String password = sp.getString(PASSWORD, "");
-        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(password)) {
-            UserInfo.getUserInfo().setId(name);
+        if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(password)) {
+            UserInfo.getUserInfo().setId(id);
             ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
-            finish();
         }
     }
 
