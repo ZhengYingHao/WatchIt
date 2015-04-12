@@ -46,7 +46,13 @@ public class HttpUtil {
 
             //first boundary
             String firstBoundary = prefix + boundary + lineEnd;
+            //middle boundary
+            String midBoundary = lineEnd + firstBoundary;
             //Encapsulated multipart part
+            String idPart = "Content-Disposition: form-data; name=\"userId\""
+                    + lineEnd + lineEnd;
+            String statePart = "Content-Disposition: form-data; name=\"state\""
+                    + lineEnd + lineEnd;
             String aidPart = "Content-Disposition: form-data; name=\"aid\""
                     + lineEnd + lineEnd;
             //last boundary
@@ -55,12 +61,19 @@ public class HttpUtil {
 
 
             dos.write(firstBoundary.getBytes());
+            dos.write(idPart.getBytes());
+            dos.write(UserInfo.getUserInfo().getId().getBytes());
+            dos.write(midBoundary.getBytes());
+
+            dos.write(statePart.getBytes());
+            dos.write(UserInfo.getUserInfo().getState().getBytes());
+            dos.write(midBoundary.getBytes());
+
             dos.write(aidPart.getBytes());
             dos.write(param.getBytes());
             dos.write(lastBoundary.getBytes());
             dos.flush();
 
-//            Log.i(TAG, firstBoundary + aidPart + param + lastBoundary);
 
             /**
              * 好似需要 urlConnection.getResponseCode() 先会连接网站
