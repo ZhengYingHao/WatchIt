@@ -12,19 +12,19 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
+import com.example.zyh.watchit.UserInfo;
 
-import java.util.Objects;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener{
 
     public static final String TAG = "LoginActivity";
-    private static final String USER= "user";
+    private static final String USER = "user";
     private static final String PASSWORD = "password";
+    // sharePreference's name
     private static final String SPNAME = "user";
 
     private EditText userNameText, passwordText;
@@ -37,13 +37,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
+        localLogin();
+
         init();
 
         loginBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
 
-        //暂时直接登录
-//        ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
     }
 
     private void init() {
@@ -57,15 +57,12 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         String name, pd;
+        name = userNameText.getText().toString();
+        pd = passwordText.getText().toString();
         switch (v.getId()) {
             case R.id.loginBtn:
-                name = userNameText.getText().toString();
-                pd = passwordText.getText().toString();
-
                 if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pd)) {
                     hintTv.setVisibility(View.VISIBLE);
-                } else if (isHaveLogin(name, pd)) {
-                    ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
                 } else {
                     AsyncTask asyncTask = new AsyncTask<Object, Void, Boolean>() {
                         @Override
@@ -76,8 +73,10 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                                 String pd = (String)params[2];
                                 String result = HttpUtil.isUser(path, name, pd);
                                 Log.i(TAG, "get nameCheck result: " + result);
-                                if ("true".equals(result)) {
-                                    storageInSharedPreference(name, pd);
+                                if (!"false".equals(result)) {
+                                    storageInSharedPreference(result, pd);
+                                    //返回id
+                                    UserInfo.getUserInfo().setId(result);
                                     ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
                                     return true;
                                 } else {
@@ -99,9 +98,6 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 }
                 break;
             case R.id.registerBtn:
-                name = userNameText.getText().toString();
-                pd = passwordText.getText().toString();
-
                 if (TextUtils.isEmpty(name) || TextUtils.isEmpty(pd)) {
                     hintTv.setVisibility(View.VISIBLE);
                 } else {
@@ -113,8 +109,9 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                                 String name = (String)params[1];
                                 String pd = (String)params[2];
                                 String result = HttpUtil.register(path, name, pd);
-                                if ("success".equals(result)) {
-                                    storageInSharedPreference(name, pd);
+                                if (!"false".equals(result)) {
+                                    storageInSharedPreference(result, pd);
+                                    UserInfo.getUserInfo().setId(result);
                                     ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
                                     return true;
                                 } else {
@@ -127,9 +124,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                         }
                         @Override
                         protected void onPostExecute(Boolean aBoolean) {
-                            if (aBoolean)
-                                Toast.makeText(LoginActivity.this, "register success.",
-                                        Toast.LENGTH_LONG).show();
+                            if (aBoolean) hintTv.setVisibility(View.INVISIBLE);
+                            else hintTv.setVisibility(View.VISIBLE);
                         }
                     };
                     asyncTask.execute(getString(R.string.registerUrl), name, pd);
@@ -138,17 +134,21 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    private boolean isHaveLogin(String name, String pd) {
+    private void localLogin() {
         SharedPreferences sp = getSharedPreferences(SPNAME, MODE_PRIVATE);
-        String spName = sp.getString(USER, "");
-        String spPassword = sp.getString(PASSWORD, "");
-        return spName.equals(name) && spPassword.equals(pd);
+        String name = sp.getString(USER, "");
+        String password = sp.getString(PASSWORD, "");
+        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(password)) {
+            UserInfo.getUserInfo().setId(name);
+            ShowFaceActivity.startShowFaceActivity(LoginActivity.this);
+            finish();
+        }
     }
 
 
-    private void storageInSharedPreference(String name, String pd) {
+    private void storageInSharedPreference(String id, String pd) {
         SharedPreferences.Editor editor = getSharedPreferences(SPNAME, MODE_PRIVATE).edit();
-        editor.putString(USER, name);
+        editor.putString(USER, id);
         editor.putString(PASSWORD, pd);
         editor.apply();
     }
