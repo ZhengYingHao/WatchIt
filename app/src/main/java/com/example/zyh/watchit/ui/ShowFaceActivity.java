@@ -1,6 +1,5 @@
 package com.example.zyh.watchit.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +19,11 @@ import com.example.zyh.watchit.R;
 import com.example.zyh.watchit.UserInfo;
 import com.example.zyh.watchit.service.TimerService;
 import com.sina.push.PushManager;
+import com.ta.TAActivity;
+import com.ta.util.http.AsyncHttpClient;
+import com.ta.util.http.BinaryHttpResponseHandler;
 
-public class ShowFaceActivity extends Activity implements View.OnClickListener{
+public class ShowFaceActivity extends TAActivity implements View.OnClickListener{
 
     public static final String TAG = "ShowFaceActivity";
 
@@ -42,7 +44,7 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
 
     private String fileName;
 
-    public static void startShowFaceActivity(Context context) {
+    public static void start(Context context) {
         UserInfo.getUserInfo().setState(UserInfo.USER_IN_CLIENT);
         Intent intent = new Intent(context, ShowFaceActivity.class);
         context.startActivity(intent);
@@ -76,7 +78,8 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
         getFaceBtn = (Button)findViewById(R.id.getFace);
         quitBtn = (Button)findViewById(R.id.quit);
         //将 tface 改为 UserInfo.getUserInfo().getId()
-        fileName = getString(R.string.faceUrl) + UserInfo.getUserInfo().getId() + ".jpeg";
+        fileName = getString(R.string.faceUrl) +
+                UserInfo.getUserInfo().getUserId() + ".jpeg";
     }
 
     private void initPushManager() {
@@ -127,29 +130,39 @@ public class ShowFaceActivity extends Activity implements View.OnClickListener{
     }
 
     public void downloadDataToBitmap(String urlPath) {
-        AsyncTask asyncTask = new AsyncTask<Object, Bitmap, Boolean>() {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.download(this, urlPath, new BinaryHttpResponseHandler() {
             @Override
-            protected Boolean doInBackground(Object... params) {
-                byte[] bytes = HttpUtil.downloadData((String)params[0]);
-                if (bytes == null) {
-                    Log.i(TAG, "bytes is null.");
-                    return false;
-                }
-                Log.i(TAG, "bytes length: " + bytes.length);
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                publishProgress(bm);
-
-
-                return true;
+            public void onSuccess(byte[] binaryData) {
+                Bitmap bm = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
+                setFaceImageView(bm);
             }
-
-            @Override
-            protected void onProgressUpdate(Bitmap... values) {
-                setFaceImageView(values[0]);
-            }
-
-        };
-        asyncTask.execute(urlPath);
+        });
+//
+//        AsyncTask asyncTask = new AsyncTask<Object, Bitmap, Boolean>() {
+//            @Override
+//            protected Boolean doInBackground(Object... params) {
+//                byte[] bytes = HttpUtil.downloadData((String)params[0]);
+//                if (bytes == null) {
+//                    Log.i(TAG, "bytes is null.");
+//                    return false;
+//                }
+//                Log.i(TAG, "bytes length: " + bytes.length);
+//                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                publishProgress(bm);
+//
+//
+//                return true;
+//            }
+//
+//            @Override
+//            protected void onProgressUpdate(Bitmap... values) {
+//                setFaceImageView(values[0]);
+//            }
+//
+//        };
+//        asyncTask.execute(urlPath);
     }
 
     public class TimeBroadcastReceiver extends BroadcastReceiver {
