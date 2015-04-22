@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public class HttpUtil {
     public static final String TAG = "HttpUtil";
+    public static final String WRONG_USER_NAME_OR_PASSWORD_INFO = "false";
+
     private static final String CHARSET = "utf-8";
 
 
@@ -62,7 +64,7 @@ public class HttpUtil {
 
             dos.write(firstBoundary.getBytes());
             dos.write(idPart.getBytes());
-            dos.write(UserInfo.getUserInfo().getId().getBytes());
+            dos.write(UserInfo.getUserInfo().getUserId().getBytes());
             dos.write(midBoundary.getBytes());
 
             dos.write(statePart.getBytes());
