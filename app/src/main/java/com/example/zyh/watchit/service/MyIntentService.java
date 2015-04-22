@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
+import com.example.zyh.watchit.UserInfo;
+import com.ta.util.http.AsyncHttpClient;
+import com.ta.util.http.RequestParams;
 
 
 public class MyIntentService extends IntentService {
@@ -15,9 +17,9 @@ public class MyIntentService extends IntentService {
 
     private static final String ACTION_SENDAID = "com.example.zyh.watchit.service.action.sendaid";
 
-    private static final String ACTION_LOGIN = "";
+//    private static final String ACTION_LOGIN = "";
 
-    private static final String ACTION_REGISTER = "";
+//    private static final String ACTION_REGISTER = "";
 
     private static final String EXTRA_AID = "com.example.zyh.watchit.service.extra.aid";
 
@@ -47,7 +49,13 @@ public class MyIntentService extends IntentService {
 
     private void handleActionSendAid(String aid) {
         Log.i(TAG, "send aid.");
-        HttpUtil.uploadString(getString(R.string.updateAidUrl), aid);
+        RequestParams params = new RequestParams();
+        params.put("userId", UserInfo.getUserInfo().getUserId());
+        params.put("state", UserInfo.getUserInfo().getState());
+        params.put("aid", aid);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(this, getString(R.string.updateAidUrl), params, null);
+//        HttpUtil.uploadString(getString(R.string.updateAidUrl), aid);
     }
 
 }
