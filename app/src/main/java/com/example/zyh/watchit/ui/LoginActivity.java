@@ -40,6 +40,10 @@ public class LoginActivity extends TAActivity implements View.OnClickListener{
         registerBtn.setOnClickListener(this);
 
         loadUserInfo();
+
+        if (hasLogin()) {
+            ShowFaceActivity.start(LoginActivity.this);
+        }
     }
 
     private void init() {
@@ -64,18 +68,17 @@ public class LoginActivity extends TAActivity implements View.OnClickListener{
         params.put(UserInfo.NAME, name);
         params.put(UserInfo.PASSWORD, pd);
 
+        Log.i(TAG, "on click.");
+        AsyncHttpClient client;
         switch (v.getId()) {
             case R.id.loginBtn:
-                if (hasLogin()) {
-                    ShowFaceActivity.start(LoginActivity.this);
-                } else {
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    client.post(getString(R.string.checkUserUrl), params,
-                            new UserDataAsyncHttpResponseHandler(name));
-                }
+                Log.i(TAG, "check user.");
+                client = new AsyncHttpClient();
+                client.post(getString(R.string.checkUserUrl), params,
+                        new UserDataAsyncHttpResponseHandler(name));
                 break;
             case R.id.registerBtn:
-                AsyncHttpClient client = new AsyncHttpClient();
+                client = new AsyncHttpClient();
                 client.post(getString(R.string.registerUrl), params,
                         new UserDataAsyncHttpResponseHandler(name));
                 break;
@@ -157,6 +160,7 @@ public class LoginActivity extends TAActivity implements View.OnClickListener{
             super.onSuccess(content);
             Log.i(TAG, content);
             if (!HttpUtil.WRONG_USER_NAME_OR_PASSWORD_INFO.equals(content)) {
+                Log.i(TAG, content);
                 storageInSharedPreference(name, content);
 
                 setUserInfo(name, content);
