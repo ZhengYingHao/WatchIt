@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.zyh.watchit.HttpUtil;
 import com.example.zyh.watchit.R;
 import com.example.zyh.watchit.UserInfo;
 import com.example.zyh.watchit.service.TimerService;
@@ -36,9 +34,9 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
 
     private static PushManager pushManager = null;
 
-    private static BitmapFactory.Options options;
+    private static final BitmapFactory.Options options = new BitmapFactory.Options();
 
-    private String APPID = "22267";
+    private static final String APPID = "22267";
 
     private Button reconnectBtn, getFaceBtn, quitBtn;
 
@@ -68,6 +66,7 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
 
         Log.i(TAG, "get fileName : " + fileName);
         downloadDataToBitmap(fileName);
+        Log.i(TAG, "have bitmap.");
     }
 
     private void init() {
@@ -129,13 +128,20 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
             aidTextView.setText(aid);
     }
 
+    /**
+     * 如果服务端没有对应的jpeg文件，会导致 “channel is unrecoverably broken and will be disposed”
+     * 有可能是 memory leak 导致的（stackoverflow 说的，有可能而已...），真正原因没能找到。
+     *
+     * 而且下载文件有问题，下载完没有显示。AutoTakePhoto上传那边也有问题.
+     */
     public void downloadDataToBitmap(String urlPath) {
-
+        Log.i(TAG, "download bitmap.");
         AsyncHttpClient client = new AsyncHttpClient();
         client.download(this, urlPath, new BinaryHttpResponseHandler() {
             @Override
             public void onSuccess(byte[] binaryData) {
                 Bitmap bm = BitmapFactory.decodeByteArray(binaryData, 0, binaryData.length);
+                Log.i(TAG, "bitmap data length : " + binaryData.length);
                 setFaceImageView(bm);
             }
         });
@@ -179,7 +185,6 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
 
 
     static {
-        options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inJustDecodeBounds = false;
         options.inSampleSize = 5;
