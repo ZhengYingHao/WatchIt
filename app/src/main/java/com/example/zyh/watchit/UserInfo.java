@@ -4,7 +4,6 @@ package com.example.zyh.watchit;
 public class UserInfo {
     private static UserInfo userInfo = new UserInfo();
 
-    public static final String USER_IN_SERVER = "server";
     public static final String USER_IN_CLIENT = "client";
 
     public static final String NAME = "name";
@@ -28,5 +27,4 @@ public class UserInfo {
     public synchronized void setName(String name) { this.name = name; }
     public String getName() { return name; }
 
-    public void clear() { userId = null; name = null; state = null; }
 }

@@ -67,7 +67,6 @@ public class SDKMsgReceiver extends BroadcastReceiver {
 
             case MPSConsts.MSG_TYPE_SAE_DATA:
                 String aid = intent.getStringExtra(MPSConsts.KEY_MSG_SAE_DATA);
-                ShowFaceActivity.setAidTextView(aid);
                 MyIntentService.startActionSendAid(context, aid);
                 break;
         }
