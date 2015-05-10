@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.zyh.watchit.R;
 import com.example.zyh.watchit.UserInfo;
@@ -25,12 +24,8 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
 
     public static final String TAG = "ShowFaceActivity";
 
-//    private static final String HINT_VISIT = "Someone at your home.";
-//    private static final String HINT_NO_VISIT = "no visitor.";
 
     private static ImageView faceImageView;
-
-    private static TextView hintTextView, aidTextView;
 
     private static PushManager pushManager = null;
 
@@ -71,8 +66,6 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
 
     private void init() {
         faceImageView = (ImageView)findViewById(R.id.faceImageView);
-        hintTextView = (TextView)findViewById(R.id.hintTextView);
-        aidTextView = (TextView)findViewById(R.id.aid);
         reconnectBtn = (Button)findViewById(R.id.reconnect);
         getFaceBtn = (Button)findViewById(R.id.getFace);
         quitBtn = (Button)findViewById(R.id.quit);
@@ -93,8 +86,6 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.reconnect:
                 pushManager.refreshConnection();
-//                pushManager = null;
-//                initPushManager();
                 break;
             case R.id.getFace:
                 downloadDataToBitmap(fileName);
@@ -118,21 +109,11 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
         Log.i(TAG, "set face view.");
     }
 
-    public static void setHintTextView(String hint) {
-        if (hintTextView != null)
-            hintTextView.setText(hint);
-    }
-
-    public static void setAidTextView(String aid) {
-        if (aid != null)
-            aidTextView.setText(aid);
-    }
-
     /**
      * 如果服务端没有对应的jpeg文件，会导致 “channel is unrecoverably broken and will be disposed”
      * 有可能是 memory leak 导致的（stackoverflow 说的，有可能而已...），真正原因没能找到。
      *
-     * 而且下载文件有问题，下载完没有显示。AutoTakePhoto上传那边也有问题.
+     * 而且下载文件有问题，下载完没有显示。
      */
     public void downloadDataToBitmap(String urlPath) {
         Log.i(TAG, "download bitmap.");
@@ -145,30 +126,6 @@ public class ShowFaceActivity extends TAActivity implements View.OnClickListener
                 setFaceImageView(bm);
             }
         });
-//
-//        AsyncTask asyncTask = new AsyncTask<Object, Bitmap, Boolean>() {
-//            @Override
-//            protected Boolean doInBackground(Object... params) {
-//                byte[] bytes = HttpUtil.downloadData((String)params[0]);
-//                if (bytes == null) {
-//                    Log.i(TAG, "bytes is null.");
-//                    return false;
-//                }
-//                Log.i(TAG, "bytes length: " + bytes.length);
-//                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                publishProgress(bm);
-//
-//
-//                return true;
-//            }
-//
-//            @Override
-//            protected void onProgressUpdate(Bitmap... values) {
-//                setFaceImageView(values[0]);
-//            }
-//
-//        };
-//        asyncTask.execute(urlPath);
     }
 
     public class TimeBroadcastReceiver extends BroadcastReceiver {
